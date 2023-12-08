@@ -13,27 +13,29 @@ SELECT
 FROM
     EMPLOYEES
 WHERE
-    MANAGER_ID IS NOT NULL
- -- 보고할 상사없는 직원의 아이디, 이름, 직위를 조회하기
-    SELECT
-        EMPLOYEE_ID,
-        FIRST_NAME,
-        JOB_ID
-    FROM
-        EMPLOYEES
-    WHERE
-        MANAGER_ID IS NULL
- -- 커미션을 받는 직원들 중에서 급여를 10000달러 이상 받는 직원의 아이디, 이름, 급여, 커미션을 조회하기
-        SELECT
-            EMPLOYEE_ID,
-            FIRST_NAME,
-            SALARY,
-            COMMISSION
-        FROM
-            EMPLOYEES
-        WHERE
-            COMMISSION IS NOT NULL
-            AND SALARY >= 10000;
+    MANAGER_ID IS NOT NULL;
+
+-- 보고할 상사없는 직원의 아이디, 이름, 직위를 조회하기
+SELECT
+    EMPLOYEE_ID,
+    FIRST_NAME,
+    JOB_ID
+FROM
+    EMPLOYEES
+WHERE
+    MANAGER_ID IS NULL;
+
+-- 커미션을 받는 직원들 중에서 급여를 10000달러 이상 받는 직원의 아이디, 이름, 급여, 커미션을 조회하기
+SELECT
+    EMPLOYEE_ID,
+    FIRST_NAME,
+    SALARY,
+    COMMISSION_PCT
+FROM
+    EMPLOYEES
+WHERE
+    COMMISSION_PCT IS NOT NULL
+    AND SALARY >= 10000;
 
 -- 2004년도에 직종이 변경된 직원의 아이디, 해당 직종의 업무 시작일, 종료일, 직종아이디를 조회하기
 
@@ -46,7 +48,7 @@ SELECT
 FROM
     JOB_HISTORY
 WHERE
-    '2004-01-01' BETWEEN '2004-12-31';
+    START_DATE BETWEEN'2004-01-01' AND '2004-12-31';
 
 -- 한번이라도 직종이 변경된 적이 있는 직원들의 직원 아이디를 중복없이 조회하기
 SELECT
@@ -60,9 +62,11 @@ SELECT
     FIRST_NAME,
     JOB_ID,
     SALARY
+FROM
+    EMPLOYEES
 WHERE
     MANAGER_ID =100
-    AND COMMISSION
+    AND COMMISSION_PCT IS NOT NULL
     AND SALARY >=10000;
 
 -- 직원 중에서 2006년 상반기에 입사한 직원의 아이디, 이름, 입사일을 조회하고, 입사일 순으로 오름차순 정렬하기
@@ -73,7 +77,20 @@ SELECT
 FROM
     EMPLOYEES
 WHERE
-    HIRE_DATE BETWEEN '2006-01-01' AND '2006-06-30'
+    HIRE_DATE >= '2006-01-01'
+    AND HIRE_DATE <'2006-07-01'
+ORDER BY
+    HIRE_DATE ASC;
+
+SELECT
+    EMPLOYEE_ID,
+    FIRST_NAME,
+    HIRE_DATE
+FROM
+    EMPLOYEES
+WHERE
+    HIRE_DATE >= '2006-01-01'
+    AND HIRE_DATE <= TO_DATE('2006/06/30 23:59:59', 'YYYY/MM/DD HH24:MI:SS')
 ORDER BY
     HIRE_DATE ASC;
 
@@ -87,7 +104,7 @@ FROM
     EMPLOYEES
 WHERE
     DEPARTMENT_ID IN(50, 60, 80)
-    AND MANAGER_ID=100;
+    AND MANAGER_ID = 100;
 
 -- 직원 중에서 직종아이디가  'CLERK'로 끝나고, 급여를 2000불 이상 받는 직원의 아이디, 이름, 급여, 직종아이디를 조회하기
 SELECT
@@ -103,32 +120,33 @@ WHERE
 
 -- 부서 소재지 정보에서 일본에 위치하고 있는 소재지의 아이디, 주소, 우편번호, 도시명을 조회하기
 SELECT
-    DEPARTMENT_ID,
-    STREET_ADRESS,
+    LOCATION_ID,
+    STREET_ADDRESS,
     POSTAL_CODE,
     CITY
 FROM
-    LOCATION_ID
+    LOCATIONS
 WHERE
-    COUNTRY_NAME = JP;
+    COUNTRY_ID = 'JP';
 
 -- 부서 소재지 정보에서 우편번호가 누락된 소재지의 아이디, 주소, 도시명을 조회하기
 SELECT
-    DEPARTMENT_ID,
-    COUNTRY_ID,
-    COUNTRY_NAME
+    LOCATION_ID,
+    STREET_ADDRESS,
+    CITY
 FROM
-    DEPARTMENTS
+    LOCATIONS
 WHERE
-    POSTAL_CODE IS NULL
- -- 직원 중에서 이름이 'S'로 시작하는 직원의 아이디, 이름을 조회하기
-    SELECT
-        EMPLOYEE_ID,
-        FIRST_NAME
-    FROM
-        EMPLOYEES
-    WHERE
-        FIRST_NAME LIKE 'S%';
+    POSTAL_CODE IS NULL;
+
+-- 직원 중에서 이름이 'S'로 시작하는 직원의 아이디, 이름을 조회하기
+SELECT
+    EMPLOYEE_ID,
+    FIRST_NAME
+FROM
+    EMPLOYEES
+WHERE
+    FIRST_NAME LIKE 'S%';
 
 -- 50번 부서의 소속된 직원들의 직원아이디, 이름, 급여를 조회하고 급여순으로 오름차순 정렬하기
 SELECT
