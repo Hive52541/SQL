@@ -347,8 +347,8 @@ SELECT
 
         SELECT *
         FROM EMPLOYEES
-        WHERE DEPARTMENET_ID = '10'
-        *위의 SQL문에서 DEPARTMENET_ID가 NUMBER타입의 컬럼이기 때문에 '10' 문자가 NUMBER 타입의 값으로 자동으로 변환된다.
+        WHERE DEPARTMENT_ID = '10'
+        *위의 SQL문에서 DEPARTMENT_ID가 NUMBER타입의 컬럼이기 때문에 '10' 문자가 NUMBER 타입의 값으로 자동으로 변환된다.
 
 명시적 변환 
         변환함수를 사용해서 '문자' <--> 날짜, '문자' <--> 숫자 간의 데이터 변환을 하는것이다.
